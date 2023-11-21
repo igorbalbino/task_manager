@@ -3,7 +3,7 @@
 ## Description
 Task manager made as a test for a company.
 
-Made based on the tutorials from the original site: `https://spring.io/quickstart` and this video tutorial `https://youtu.be/ssj0CGxv60k?si=18ORlYzxa_Lz7LXr`.
+Made based on the tutorials from the original site: `https://spring.io/quickstart`, video tutorials `https://youtu.be/k5PeywcbVYc?si=wbuDFtmbNApfKVSI` and `https://youtu.be/ssj0CGxv60k?si=18ORlYzxa_Lz7LXr`.
 Project created at site: `https://start.spring.io/`,
 with config:
 ```
@@ -15,6 +15,43 @@ Dependencies: Lombok, Spring Web and Spring Data MongoDB
 
 Package name: com.example.avaliacao
 ```
+
+To create de MongoDB database, I used the following tutorial: `https://www.mongodb.com/basics/create-database`.
+
+Command: `show dbs` will show de created dbs.
+
+There is no word to create a db in mongo console, so, to create one, you just switch to the db name you want to create and add same data to collection or table `use taskmanager`.
+
+To create the logic from the auto-increment ID, I used the following tutorial: `https://www.mongodb.com/docs/v2.2/tutorial/create-an-auto-incrementing-field/`;
+
+The `_id` from mongo is an strange object with letters and numbers so I created a table to count the IDs of my table `departamento`: `db.counters.insertOne({id: "idDepartamento", seq: 0})`.
+
+This function is to make the id incrementation automatic. It can be called when adding data to the `departamento` table:
+```
+function getNextSequence(name) {
+    var ret = db.counters.findAndModify(
+        {
+            query: { id: name },
+            update: { $inc: { seq: 1 } },
+            new: true
+        }
+    );
+
+    return ret.seq;
+}
+```
+
+Adding data with auto-increment IDs:
+```
+db.departamento.insertOne({id: getNextSequence("idDepartamento"), titulo: "Financeiro"})
+db.departamento.insertOne({id: getNextSequence("idDepartamento"), titulo: "Recursos Humanos"})
+```
+
+Now, our db will appear in the `show dbs` command.
+
+And we can select data from our `departamento` table: `db.departamento.find()`;
+
+To delete the table, use command: `db.departamento.drop()`.
 
 ### The Test
 ```
