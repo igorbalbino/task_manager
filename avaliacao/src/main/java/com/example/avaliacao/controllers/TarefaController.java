@@ -1,14 +1,11 @@
 package com.example.avaliacao.controllers;
 
 import com.example.avaliacao.interfaces.TarefaRepository;
-import com.example.avaliacao.models.Pessoa;
 import com.example.avaliacao.models.Tarefa;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,7 +14,7 @@ public class TarefaController {
     private TarefaRepository repository;
 
     @PostMapping("/tarefas")
-    public String tarefas(@RequestParam(value = "titulo", defaultValue = "World") String titulo,
+    public String add(@RequestParam(value = "titulo", defaultValue = "World") String titulo,
                           @RequestParam(value = "descricao", defaultValue = "Descricao da tarefa") String descricao,
                           @RequestParam(value = "prazo", defaultValue = "10 dias") String prazo,
                           @RequestParam(value = "departamento", defaultValue = "Financeiro") String departamento,
@@ -31,8 +28,8 @@ public class TarefaController {
         return "Salvo!";
     }
 
-    @PutMapping("/tarefa/alocar")
-    public String alocarTarefas(@RequestParam(value = "idPessoa", defaultValue = "0") String idPessoa,
+    @PutMapping("/tarefas/alocar")
+    public String alicar(@RequestParam(value = "idPessoa", defaultValue = "0") String idPessoa,
                           @RequestParam(value = "idTarefa", defaultValue = "0") String idTarefa) {
 
         Optional<Tarefa> opTarefa = repository.findById(idTarefa);
@@ -45,7 +42,7 @@ public class TarefaController {
         return "Salvo!";
     }
 
-    @PutMapping("/tarefa/finalizar")
+    @PutMapping("/tarefas/finalizar")
     public String finalizar(@RequestParam(value = "idTarefa", defaultValue = "0") String idTarefa,
                                 @RequestParam(value = "duracao", defaultValue = "0") String duracao) {
 
@@ -58,5 +55,10 @@ public class TarefaController {
         repository.save(tarefa);
 
         return "Salvo!";
+    }
+
+    @GetMapping("/tarefas/listar")
+    public List<Tarefa> list() {
+        return repository.findAll();
     }
 }

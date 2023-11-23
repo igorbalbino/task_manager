@@ -5,6 +5,7 @@ import com.example.avaliacao.models.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -12,8 +13,8 @@ public class PessoaController {
     @Autowired
     private PessoaRepository repository;
 
-    @PostMapping("/pessoas")
-    public String pessoas(@RequestParam(value = "nome", defaultValue = "World") String nome,
+    @PostMapping("/pessoas/add")
+    public String add(@RequestParam(value = "nome", defaultValue = "World") String nome,
                           @RequestParam(value = "departamento", defaultValue = "Financeiro") String departamento,
                           @RequestParam(value = "tarefas", defaultValue = "Testar") String[] tarefas) {
         Pessoa pessoa = new Pessoa(nome, departamento, tarefas);
@@ -21,8 +22,8 @@ public class PessoaController {
         return "Salvo!";
     }
 
-    @PutMapping("/pessoa")
-    public String pessoa(@RequestParam(value = "id", defaultValue = "0") String id,
+    @PostMapping("/pessoas/alterar")
+    public String update(@RequestParam(value = "id", defaultValue = "0") String id,
                           @RequestParam(value = "departamento", defaultValue = "Financeiro") String departamento,
                           @RequestParam(value = "tarefas", defaultValue = "Testar") String[] tarefas) {
         Optional<Pessoa> opPessoa  = repository.findById(id);
@@ -35,13 +36,18 @@ public class PessoaController {
         return "Salvo!";
     }
 
-    @DeleteMapping("/pessoa")
-    public String deletaPessoa(@RequestParam(value = "id", defaultValue = "0") String id) {
+    @DeleteMapping("/pessoas/deletar")
+    public String deleta(@RequestParam(value = "id", defaultValue = "0") String id) {
         Optional<Pessoa> opPessoa  = repository.findById(id);
 
         Pessoa pessoa = opPessoa.get();
 
         repository.delete(pessoa);
         return "Salvo!";
+    }
+
+    @GetMapping("/pessoas/listar")
+    public List<Pessoa> list() {
+        return repository.findAll();
     }
 }
